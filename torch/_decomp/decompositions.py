@@ -4014,6 +4014,15 @@ def scaled_dot_product_flash_attention(
     )
 
 
+@register_decomposition(aten.squeeze)
+def squeeze(self: Tensor) -> Tensor:
+    # aten::squeeze(Tensor(a) self) -> Tensor(a)
+    return torch.squeeze(
+        self,
+        dim=tuple(i for (i, d) in enumerate(self.shape) if d == 1),
+    )
+
+
 def register_inplace(aten_op, outplace_op):
     @register_decomposition(aten_op)
     def inplace_op(*args, **kwargs):
